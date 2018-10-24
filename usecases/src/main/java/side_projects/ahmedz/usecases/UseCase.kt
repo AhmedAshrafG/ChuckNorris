@@ -2,14 +2,14 @@ package side_projects.ahmedz.usecases
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 
 abstract class UseCase<in I, O: Any>(
 		private val workScheduler: Scheduler,
 		private val postExecuteScheduler: Scheduler
 ) {
-	private val disposables by lazy { CompositeDisposable() }
+	private var disposable: Disposable? = null
 
 	operator fun invoke(
 			input: I,
@@ -17,14 +17,22 @@ abstract class UseCase<in I, O: Any>(
 			onError: (Throwable) -> Unit = {},
 			onComplete: () -> Unit = {}
 	) {
+		disposable?.dispose()
 		execute(input)
 			.subscribeOn(workScheduler)
 			.observeOn(postExecuteScheduler)
-			.subscribeBy(onError, onComplete, onNext)
-			.addTo(disposables)
+			.subscribeBy(
+					{
+						it.printStackTrace()
+						onError(it)
+					},
+					onComplete,
+					onNext
+			)
+			.also { disposable = it }
 	}
 
 	abstract fun execute(input: I): Observable<O>
 
-	fun stop() = disposables.clear()
+	fun stop() = disposable?.dispose()
 }
