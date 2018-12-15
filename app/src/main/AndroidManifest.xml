@@ -5,8 +5,6 @@
     package="side_projects.ahmedz.chucknorris"
     >
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:name=".ThugApplication"
         android:allowBackup="true"

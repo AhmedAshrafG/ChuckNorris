@@ -1,20 +1,21 @@
 package side_projects.ahmedz.data
 
 import io.reactivex.*
-import side_projects.ahmedz.domain.model.Joke
+import side_projects.ahmedz.domain.entity.JokeEntity
+import side_projects.ahmedz.domain.repository.IJokesRepository
 
 public class JokesRepository(
-		private val localSource: JokesLocalSource,
+		private val localSource: JokesCache,
 		private val remoteSource: JokesRemoteSource
-) {
-	fun getFavoriteJokes(): Flowable<List<Joke>> = localSource.getFavoriteJokes()
+): IJokesRepository {
+	override fun getFavoriteJokes(): Flowable<List<JokeEntity>> = localSource.getFavoriteJokes()
 
-	fun searchForJokes(text: String): Single<List<Joke>> = remoteSource.searchForJokes(text)
+	override fun searchForJokes(text: String): Single<List<JokeEntity>> = remoteSource.searchForJokes(text)
 
-	fun getRandomJoke(): Single<Joke> = remoteSource.getRandomJoke()
+	override fun getRandomJoke(): Single<JokeEntity> = remoteSource.getRandomJoke()
 		.map { it.copy(isFavorite = localSource.isJokeFavorite(it)) }
 
-	fun saveJoke(joke: Joke): Completable = localSource.saveJoke(joke)
+	override fun saveJoke(joke: JokeEntity): Completable = localSource.saveJoke(joke)
 
-	fun removeJoke(joke: Joke): Completable = localSource.removeJoke(joke)
+	override fun removeJoke(joke: JokeEntity): Completable = localSource.removeJoke(joke)
 }

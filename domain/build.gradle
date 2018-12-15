@@ -3,4 +3,5 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx_version"
 }

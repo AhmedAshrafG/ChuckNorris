@@ -1,8 +1,36 @@
-apply plugin: 'java-library'
-apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 27
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
 
 dependencies {
     implementation project(':domain')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    // Test
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$test_runner_version"
+    // DI
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-scope:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    androidTestImplementation "org.koin:koin-test:$koin_version"
+    // RxKotlin
     implementation "io.reactivex.rxjava2:rxkotlin:$rx_version"
+    // Room
+    implementation "android.arch.persistence.room:runtime:$lifecycle_version"
+    implementation "android.arch.persistence.room:rxjava2:$lifecycle_version"
+    kapt "android.arch.persistence.room:compiler:$lifecycle_version"
+    // Networking
+    implementation "com.google.code.gson:gson:2.8.5"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 }
